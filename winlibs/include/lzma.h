@@ -189,7 +189,7 @@
  */
 #ifndef LZMA_API_IMPORT
 #	if !defined(LZMA_API_STATIC) && defined(_WIN32) && !defined(__GNUC__)
-#		define LZMA_API_IMPORT __declspec(dllimport)
+#		define LZMA_API_IMPORT
 #	else
 #		define LZMA_API_IMPORT
 #	endif
@@ -197,7 +197,7 @@
 
 #ifndef LZMA_API_CALL
 #	if defined(_WIN32) && !defined(__CYGWIN__)
-#		define LZMA_API_CALL __cdecl
+#		define LZMA_API_CALL
 #	else
 #		define LZMA_API_CALL
 #	endif
@@ -219,8 +219,13 @@
  */
 #ifndef lzma_nothrow
 #	if defined(__cplusplus)
-#		define lzma_nothrow throw()
-#	elif __GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 3)
+#		if __cplusplus >= 201103L
+#			define lzma_nothrow noexcept
+#		else
+#			define lzma_nothrow throw()
+#		endif
+#	elif defined(__GNUC__) && (__GNUC__ > 3 \
+			|| (__GNUC__ == 3 && __GNUC_MINOR__ >= 3))
 #		define lzma_nothrow __attribute__((__nothrow__))
 #	else
 #		define lzma_nothrow
@@ -237,7 +242,7 @@
  * break anything if these are sometimes enabled and sometimes not, only
  * affects warnings and optimizations.
  */
-#if __GNUC__ >= 3
+#if defined(__GNUC__) && __GNUC__ >= 3
 #	ifndef lzma_attribute
 #		define lzma_attribute(attr) __attribute__(attr)
 #	endif

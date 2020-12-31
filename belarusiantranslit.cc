@@ -1,9 +1,15 @@
-/* This file is (c) 2013 Maksim Tamkovicz <quendimax@gmail.com>
+﻿/* This file is (c) 2013 Maksim Tamkovicz <quendimax@gmail.com>
  * Part of GoldenDict. Licensed under GPLv3 or later, see the LICENSE file */
 
 #include "belarusiantranslit.hh"
 #include "transliteration.hh"
 #include <QCoreApplication>
+
+#if _MSC_VER >= 1600
+
+#pragma execution_character_set("utf-8")
+
+#endif
 
 namespace BelarusianTranslit {
 
