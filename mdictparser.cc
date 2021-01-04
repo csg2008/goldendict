@@ -20,9 +20,12 @@
 
 #include "mdictparser.hh"
 
+#if defined(_WIN32) || defined(_WIN64)
+	#define USING_STATIC_LIBICONV
+#endif
+#include <iconv.h>
 #include <errno.h>
 #include <zlib.h>
-#include <iconv.h>
 #include <lzo/lzo1x.h>
 
 #include <QtEndian>
@@ -504,10 +507,11 @@ bool MdictParser::readRecordBlockInfos()
   QDataStream in( file_ );
   in.setByteOrder( QDataStream::BigEndian );
   qint64 numRecordBlocks = readNumber( in );
-  readNumber( in ); // total number of records, skip
+  qint64 entries = readNumber( in ); // total number of records, skip
   qint64 recordInfoSize = readNumber( in );
   totalRecordsSize_ = readNumber( in );
   recordPos_ = file_->pos() + recordInfoSize;
+  GD_DPRINTF( "MdictParser: readRecordBlockInfos entries %lld %lld\n", entries, numRecordBlocks);
 
   // Build record block index
   recordBlockInfos_.reserve( numRecordBlocks );

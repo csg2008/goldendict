@@ -1041,7 +1041,7 @@ QString & MdxDictionary::filterResource( QString const & articleId, QString & ar
   QString id = QString::fromStdString( getId() );
   QString uniquePrefix = QString::fromLatin1( "g" ) + id + "_" + articleId + "_";
 
-  QRegularExpression allLinksRe( "(?:<\\s*(a(?:rea)?|img|link|script)(?:\\s+[^>]+|\\s*)>)",
+  QRegularExpression allLinksRe( "(?:<\\s*(a(?:rea)?|img|link|script|embed|source)(?:\\s+[^>]+|\\s*)>)",
                                  QRegularExpression::CaseInsensitiveOption );
   QRegularExpression wordCrossLink( "([\\s\"']href\\s*=)\\s*([\"'])entry://([^>#]*?)((?:#[^>]*?)?)\\2",
                                     QRegularExpression::CaseInsensitiveOption );
@@ -1121,6 +1121,17 @@ QString & MdxDictionary::filterResource( QString const & articleId, QString & ar
         newTxt += match.captured( 2 );
         newLink.replace( match.capturedStart(), match.capturedLength(), newTxt );
       }
+
+      match = srcRe.match( newLink );
+      if( match.hasMatch() )
+      {
+          QString newText = match.captured( 1 ) + match.captured( 2 )
+                  + "bres://" + id + "/"
+                  + match.captured( 3 ) + match.captured( 2 );
+          newLink.replace( match.capturedStart(), match.capturedLength(), newText );
+      }
+      else
+          newLink.replace( srcRe2, "\\1\"bres://" + id + "/\\2\"" );
     }
     else
     if( linkType.compare( "link" ) == 0 )
@@ -1139,11 +1150,16 @@ QString & MdxDictionary::filterResource( QString const & articleId, QString & ar
                                    "\\1\"bres://" + id + "/\\2\"" );
     }
     else
-    if( linkType.compare( "script" ) == 0 || linkType.compare( "img" ) == 0 )
+    if( linkType.compare( "script" ) == 0 || linkType.compare( "img" ) == 0
+            || linkType.compare( "embed" ) == 0
+        #ifdef MDX_LOCALVIDEO_CACHED
+            || linkType.compare( "source" ) == 0
+        #endif
+            )
     {
       // javascripts and images
       QRegularExpressionMatch match = inlineScriptRe.match( linkTxt );
-      if( linkType.at( 0 ) == 's'
+      if( linkType.compare( "script" ) == 0
           && match.hasMatch() && match.capturedLength() == linkTxt.length() )
       {
         // skip inline scripts
