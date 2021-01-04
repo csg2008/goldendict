@@ -511,7 +511,7 @@ bool MdictParser::readRecordBlockInfos()
   qint64 recordInfoSize = readNumber( in );
   totalRecordsSize_ = readNumber( in );
   recordPos_ = file_->pos() + recordInfoSize;
-  GD_DPRINTF( "MdictParser: readRecordBlockInfos entries %lld %lld\n", entries, numRecordBlocks);
+  GD_DPRINTF( "MdictParser: readRecordBlockInfos entries %lld %lld\n", entries, wordCount_);
 
   // Build record block index
   recordBlockInfos_.reserve( numRecordBlocks );
