@@ -14,7 +14,7 @@
     <ProjectGuid>{D7A6F5CA-B6EE-308E-B3A3-735E6359C7CA}</ProjectGuid>
     <RootNamespace>GoldenDict</RootNamespace>
     <Keyword>QtVS_v303</Keyword>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <WindowsTargetPlatformMinVersion>10.0.18362.0</WindowsTargetPlatformMinVersion>
     <QtMsBuild Condition="'$(QtMsBuild)'=='' or !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
   </PropertyGroup>
@@ -27,6 +27,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <IntermediateDirectory>build\</IntermediateDirectory>
     <PrimaryOutput>GoldenDict</PrimaryOutput>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <PlatformToolset>v142</PlatformToolset>
@@ -36,6 +37,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <IntermediateDirectory>build\</IntermediateDirectory>
     <PrimaryOutput>GoldenDict</PrimaryOutput>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
@@ -100,6 +102,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>setupapi.lib;ksuser.lib;winmm.lib;zlib.lib;bz2.lib;lzo2.lib;shell32.lib;user32.lib;sapi.lib;hunspell.lib;iconv.lib;wsock32.lib;psapi.lib;ole32.lib;oleaut32.lib;advapi32.lib;comdlg32.lib;vorbisfile.lib;vorbis.lib;ogg.lib;ao.lib;swresample.lib;avutil-gd.lib;avformat-gd.lib;avcodec-gd.lib;uxtheme.lib;lzma.lib;zstd.lib;tiff.lib;eb.lib;opencc.lib;mfuuid.lib;strmiids.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -165,6 +168,7 @@
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <WarningLevel>Level3</WarningLevel>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>setupapi.lib;ksuser.lib;winmm.lib;zlib.lib;bz2.lib;lzo2.lib;shell32.lib;user32.lib;sapi.lib;hunspell.lib;iconv.lib;wsock32.lib;psapi.lib;ole32.lib;oleaut32.lib;advapi32.lib;comdlg32.lib;vorbisfile.lib;vorbis.lib;ogg.lib;ao.lib;swresample.lib;avutil-gd.lib;avformat-gd.lib;avcodec-gd.lib;uxtheme.lib;lzma.lib;zstd.lib;tiff.lib;eb.lib;opencc.lib;mfuuid.lib;strmiids.lib;%(AdditionalDependencies)</AdditionalDependencies>
