@@ -42,7 +42,7 @@ public:
   Writer( File::Class & );
 
   /// Starts new block. Returns its address.
-  uint32_t startNewBlock();
+  size_t startNewBlock();
 
   /// Add data to the previously started block.
   void addToBlock( void const * data, size_t size );

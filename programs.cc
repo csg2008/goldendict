@@ -245,7 +245,7 @@ void ProgramDataRequest::instanceFinished( QByteArray output, QString error )
             if( size & 1 )
               size -= 1;
             string res= Iconv::toUtf8( "UTF-16LE", output.data() + 2, size );
-            prog_output = QString::fromUtf8( res.c_str(), res.size() );
+            prog_output = QString::fromStdString( res );
           }
           else
           if( output.length() >= 2 && uchars[ 0 ] == 0xFE && uchars[ 1 ] == 0xFF )
@@ -254,7 +254,7 @@ void ProgramDataRequest::instanceFinished( QByteArray output, QString error )
             if( size & 1 )
               size -= 1;
             string res = Iconv::toUtf8( "UTF-16BE", output.data() + 2, size );
-            prog_output = QString::fromUtf8( res.c_str(), res.size() );
+            prog_output = QString::fromStdString( res );
           }
           else
           if( output.length() >= 3 && uchars[ 0 ] == 0xEF && uchars[ 1 ] == 0xBB && uchars[ 2 ] == 0xBF )

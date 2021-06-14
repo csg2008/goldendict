@@ -51,7 +51,7 @@ string escape( string const & str )
 static void storeLineInDiv( string & result, string const & line, bool baseRightToLeft )
 {
   result += "<div";
-  if( unescape( QString::fromUtf8( line.c_str(), line.size() ) ).isRightToLeft() != baseRightToLeft )
+  if( unescape( QString::fromStdString( line ) ).isRightToLeft() != baseRightToLeft )
   {
     result += " dir=\"";
     result += baseRightToLeft ? "ltr\"" : "rtl\"";
@@ -168,7 +168,7 @@ QString unescape( QString const & str, bool saveFormat )
 
 string unescapeUtf8( const string &str, bool saveFormat )
 {
-  return string( unescape( QString::fromUtf8( str.c_str(), str.size() ) ).toUtf8().data(), saveFormat );
+  return string( unescape( QString::fromStdString( str ) ).toStdString(), saveFormat );
 }
 
 }

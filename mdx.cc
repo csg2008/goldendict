@@ -511,7 +511,7 @@ void MdxDictionary::getArticleText( uint32_t articleAddress, QString & headword,
     string articleText;
 
     loadArticle( articleAddress, articleText, true );
-    text = Html::unescape( QString::fromUtf8( articleText.data(), articleText.size() ) );
+    text = Html::unescape( QString::fromStdString( articleText ) );
   }
   catch( std::exception &ex )
   {
@@ -956,7 +956,7 @@ const QString & MdxDictionary::getDescription()
     vector< char > chunk;
     char * dictDescription = chunks.getBlock( idxHeader.descriptionAddress, chunk );
     string str( dictDescription );
-    dictionaryDescription = QString::fromUtf8( str.c_str(), str.size() );
+    dictionaryDescription = QString::fromStdString( str );
   }
 
   return dictionaryDescription;

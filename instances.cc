@@ -30,7 +30,7 @@ Group::Group( Config::Group const & cfgGroup,
 
     bool added = false;
 
-    for( unsigned y = allDictionaries.size(); y--; )
+    for( size_t y = allDictionaries.size(); y--; )
       if ( allDictionaries[ y ]->getId() == id )
       {
         groupDicts.push_back( allDictionaries[ y ] );
@@ -166,13 +166,13 @@ void complementDictionaryOrder( Group & group,
 {
   set< string > presentIds;
 
-  for( unsigned x = group.dictionaries.size(); x--; )
+  for( size_t x = group.dictionaries.size(); x--; )
     presentIds.insert( group.dictionaries[ x ]->getId());
 
-  for( unsigned x = inactiveDictionaries.dictionaries.size(); x--; )
+  for( size_t x = inactiveDictionaries.dictionaries.size(); x--; )
     presentIds.insert( inactiveDictionaries.dictionaries[ x ]->getId() );
 
-  for( unsigned x = 0; x < dicts.size(); ++x )
+  for( size_t x = 0; x < dicts.size(); ++x )
   {
     if ( presentIds.find( dicts[ x ]->getId() ) == presentIds.end() )
       group.dictionaries.push_back( dicts[ x ] );
@@ -187,7 +187,7 @@ void updateNames( Config::Group & group,
   {
     std::string id = group.dictionaries[ x ].id.toStdString();
 
-    for( unsigned y = allDictionaries.size(); y--; )
+    for( size_t y = allDictionaries.size(); y--; )
       if ( allDictionaries[ y ]->getId() == id )
       {
         group.dictionaries[ x ].name = QString::fromUtf8( allDictionaries[ y ]->getName().c_str() );

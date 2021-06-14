@@ -28,7 +28,7 @@ Writer::Writer( File::Class & f ):
   file.write( zero, sizeof( zero ) );
 }
 
-uint32_t Writer::startNewBlock()
+size_t Writer::startNewBlock()
 {
   if ( bufferUsed >= ChunkMaxSize )
   {
@@ -41,7 +41,7 @@ uint32_t Writer::startNewBlock()
   // The address is comprised of the offset within the chunk (in lower
   // 16 bits, always fits there since ChunkMaxSize-1 does) and the
   // number of the chunk, which is therefore limited to be 65535 max.
-  return bufferUsed | ( (uint32_t)offsets.size() << 16 );
+  return bufferUsed | (offsets.size() << 16 );
 }
 
 void Writer::addToBlock( void const * data, size_t size )

@@ -1850,7 +1850,7 @@ void ArticleView::contextMenuRequested( QPoint const & pos )
   {
     // Find this dictionary
 
-    for( unsigned x = allDictionaries.size(); x--; )
+    for( size_t x = allDictionaries.size(); x--; )
     {
       if ( allDictionaries[ x ]->getId() == i->toUtf8().data() )
       {

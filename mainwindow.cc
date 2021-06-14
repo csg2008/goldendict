@@ -1351,7 +1351,7 @@ void MainWindow::updateStatusLine()
 {
   unsigned articleCount = 0, wordCount = 0;
 
-  for( unsigned x = dictionaries.size(); x--; )
+  for( size_t x = dictionaries.size(); x--; )
   {
     articleCount += dictionaries[ x ]->getArticleCount();
     wordCount += dictionaries[ x ]->getWordCount();
@@ -1963,7 +1963,7 @@ void MainWindow::updateFoundInDictsList()
     {
       // Find this dictionary
 
-      for( unsigned x = dictionaries.size(); x--; )
+      for( size_t x = dictionaries.size(); x--; )
       {
         if ( dictionaries[ x ]->getId() == i->toUtf8().data() )
         {

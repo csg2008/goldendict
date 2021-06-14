@@ -837,7 +837,7 @@ vector< sptr< Dictionary::Class > > makeDictionaries( Config::Hunspell const & c
 
   for( int x = 0; x < cfg.enabledDictionaries.size(); ++x )
   {
-    for( unsigned d = dataFiles.size(); d--; )
+    for( size_t d = dataFiles.size(); d--; )
     {
       if ( dataFiles[ d ].dictId == cfg.enabledDictionaries[ x ] )
       {
