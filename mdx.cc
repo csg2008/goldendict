@@ -324,7 +324,6 @@ MdxDictionary::MdxDictionary( string const & id, string const & indexFile,
   // Full-text search parameters
 
   can_FTS = true;
-
   ftsIdxName = indexFile + "_FTS";
 
   if( !Dictionary::needToRebuildIndex( dictionaryFiles, ftsIdxName )
@@ -447,8 +446,8 @@ void MdxDictionary::doDeferredInit()
       vector< string > const dictFiles = getDictionaryFilenames();
       for ( uint32_t i = 1; i < dictFiles.size() && i < mddFileNames.size() + 1; i++ )
       {
-        QFileInfo fi( QString::fromUtf8( dictFiles[ i ].c_str() ) );
-        QString mddFileName = QString::fromUtf8( mddFileNames[ i - 1 ].c_str() );
+        QFileInfo fi( QString::fromStdString( dictFiles[ i ] ) );
+        QString mddFileName = QString::fromStdString( mddFileNames[ i - 1 ] );
 
         if ( fi.fileName() != mddFileName || !fi.exists() )
           continue;
@@ -487,8 +486,7 @@ void MdxDictionary::makeFTSIndex( QAtomicInt & isCancelled, bool firstIteration 
   if( firstIteration && getArticleCount() > FTS::MaxDictionarySizeForFastSearch )
     return;
 
-  gdDebug( "MDict: Building the full-text index for dictionary: %s\n",
-           getName().c_str() );
+  gdDebug( "MDict: Building the full-text index for dictionary: %s\n", getName().c_str() );
 
   try
   {
@@ -608,7 +606,7 @@ void MdxArticleRequest::run()
 
   if ( dict.ensureInitDone().size() )
   {
-    setErrorString( QString::fromUtf8( dict.ensureInitDone().c_str() ) );
+    setErrorString( QString::fromStdString( dict.ensureInitDone() ) );
     finish();
     return;
   }
@@ -622,7 +620,7 @@ void MdxArticleRequest::run()
     chain.insert( chain.end(), altChain.begin(), altChain.end() );
   }
 
-  // Some synonims make it that the articles appear several times. We combat this
+  // Some synonyms make it that the articles appear several times. We combat this
   // by only allowing them to appear once.
   set< uint32_t > articlesIncluded;
   // Sometimes the articles are physically duplicated. We store hashes of
@@ -643,8 +641,8 @@ void MdxArticleRequest::run()
 
     // Grab that article
     string articleBody;
-    bool hasError = false;
     QString errorMessage;
+    bool hasError = false;
 
     try
     {
@@ -664,7 +662,7 @@ void MdxArticleRequest::run()
     if ( hasError )
     {
       setErrorString( tr( "Failed loading article from %1, reason: %2" )
-                      .arg( QString::fromUtf8( dict.getDictionaryFilenames()[ 0 ].c_str() ) )
+                      .arg( QString::fromStdString( dict.getDictionaryFilenames()[ 0 ] ) )
                       .arg( errorMessage ) );
       finish();
       return;
@@ -954,8 +952,7 @@ const QString & MdxDictionary::getDescription()
     Mutex::Lock _( idxMutex );
     vector< char > chunk;
     char * dictDescription = chunks.getBlock( idxHeader.descriptionAddress, chunk );
-    string str( dictDescription );
-    dictionaryDescription = QString::fromStdString( str );
+    dictionaryDescription = QString::fromUtf8( dictDescription );
   }
 
   return dictionaryDescription;
@@ -1031,7 +1028,7 @@ void MdxDictionary::loadArticle( uint32_t offset, string & articleText, bool noF
     closedTags += 1;
   }
 
-  articleText = string( article.toUtf8().constData() );
+  articleText = article.toStdString();
 }
 
 #if QT_VERSION >= QT_VERSION_CHECK( 5, 0, 0 )
@@ -1442,8 +1439,7 @@ vector< sptr< Dictionary::Class > > makeDictionaries( vector< string > const & f
 
   for ( vector< string >::const_iterator i = fileNames.begin(); i != fileNames.end(); i++ )
   {
-    // Skip files with the extensions different to .mdx to speed up the
-    // scanning
+    // Skip files with the extensions different to .mdx to speed up the scanning
     if ( i->size() < 4 || strcasecmp( i->c_str() + ( i->size() - 4 ), ".mdx" ) != 0 )
       continue;
 
@@ -1453,8 +1449,7 @@ vector< sptr< Dictionary::Class > > makeDictionaries( vector< string > const & f
     string dictId = Dictionary::makeDictionaryId( dictFiles );
     string indexFile = indicesDir + dictId;
 
-    if ( Dictionary::needToRebuildIndex( dictFiles, indexFile ) ||
-         indexIsOldOrBad( dictFiles, indexFile ) )
+    if ( Dictionary::needToRebuildIndex( dictFiles, indexFile ) || indexIsOldOrBad( dictFiles, indexFile ) )
     {
       // Building the index
 
@@ -1466,7 +1461,7 @@ vector< sptr< Dictionary::Class > > makeDictionaries( vector< string > const & f
       if ( !parser.open( *i ) )
         continue;
 
-      string title = string( parser.title().toUtf8().constData() );
+      string title = parser.title().toStdString();
       initializing.indexingDictionary( title );
 
       for ( vector< string >::const_iterator mddIter = dictFiles.begin() + 1;
@@ -1497,7 +1492,7 @@ vector< sptr< Dictionary::Class > > makeDictionaries( vector< string > const & f
 
       // then the encoding
       {
-        string encoding = string( parser.encoding().toUtf8().constData() );
+        string encoding = parser.encoding().toStdString();
         idx.write< uint32_t >( encoding.size() );
         idx.write( encoding.data(), encoding.size() );
       }
@@ -1514,7 +1509,7 @@ vector< sptr< Dictionary::Class > > makeDictionaries( vector< string > const & f
 
       // Save dictionary description if there's one
       {
-        string description = string( parser.description().toUtf8().constData() );
+        string description = parser.description().toStdString();
         idxHeader.descriptionAddress = chunks.startNewBlock();
         chunks.addToBlock( description.c_str(), description.size() + 1 );
         idxHeader.descriptionSize = description.size() + 1;
@@ -1548,7 +1543,7 @@ vector< sptr< Dictionary::Class > > makeDictionaries( vector< string > const & f
         mddIndices.push_back( mddIndexedWords );
         // Save filename for .mdd files only
         QFileInfo fi( mddParser->filename() );
-        mddFileNames.push_back( string( fi.fileName().toUtf8().constData() ) );
+        mddFileNames.push_back( fi.fileName().toStdString() );
         mddParsers.pop_front();
       }
 
@@ -1571,8 +1566,8 @@ vector< sptr< Dictionary::Class > > makeDictionaries( vector< string > const & f
         for ( MdictParser::StyleSheets::const_iterator iter = styleSheets.begin();
               iter != styleSheets.end(); iter++ )
         {
-          string styleBegin( iter->second.first.toUtf8().constData() );
-          string styleEnd( iter->second.second.toUtf8().constData() );
+          string styleBegin( iter->second.first.toStdString() );
+          string styleEnd( iter->second.second.toStdString() );
 
           // key
           idx.write<qint32>( iter->first );
