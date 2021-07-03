@@ -165,12 +165,6 @@ public:
   static bool parseCompressedBlock( qint64 compressedBlockSize, const char * compressedBlockPtr,
                                     qint64 decompressedBlockSize, QByteArray & decompressedBlock);
   static QString & substituteStylesheet( QString & article, StyleSheets const & styleSheets );
-  static inline string substituteStylesheet( string const & article, StyleSheets const & styleSheets )
-  {
-    QString s = QString::fromUtf8( article.c_str() );
-    substituteStylesheet( s, styleSheets );
-    return string( s.toUtf8().constData() );
-  }
 
 protected:
   qint64 readNumber( QDataStream & in );
