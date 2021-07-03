@@ -156,7 +156,7 @@ public:
   MdictParser();
   ~MdictParser() {}
 
-  bool open( const char * filename );
+  bool open( const std::string & filename );
   bool readNextHeadWordIndex( HeadWordIndex & headWordIndex );
   bool readRecordBlock( HeadWordIndex & headWordIndex, RecordHandler & recordHandler );
 

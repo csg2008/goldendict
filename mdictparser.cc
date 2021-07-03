@@ -50,8 +50,8 @@ namespace Mdict
 
 enum EncryptedSection
 {
-  EcryptedHeadWordHeader = 1,
-  EcryptedHeadWordIndex = 2
+  EncryptedHeadWordHeader = 1,
+  EncryptedHeadWordIndex  = 2
 };
 
 static inline int u16StrSize( const ushort * unicode )
@@ -67,12 +67,11 @@ static inline int u16StrSize( const ushort * unicode )
 
 static QDomNamedNodeMap parseHeaderAttributes( const QString & headerText )
 {
-  QDomNamedNodeMap attributes;
   QDomDocument doc;
   doc.setContent( headerText );
 
   QDomElement docElem = doc.documentElement();
-  attributes = docElem.attributes();
+  QDomNamedNodeMap attributes = docElem.attributes();
 
   for ( int i = 0; i < attributes.count(); i++ )
   {
@@ -121,12 +120,12 @@ MdictParser::MdictParser() :
 {
 }
 
-bool MdictParser::open( const char * filename )
+bool MdictParser::open( const std::string & filename )
 {
-  filename_ = QString::fromUtf8( filename );
-  file_ = new QFile( filename_ );
+  GD_DPRINTF( "MdictParser: open %s\n", filename.c_str() );
 
-  GD_DPRINTF( "MdictParser: open %s\n", filename );
+  filename_ = QString::fromStdString( filename );
+  file_ = new QFile( filename_ );
 
   if ( file_.isNull() || !file_->exists() )
     return false;
@@ -475,7 +474,7 @@ bool MdictParser::readHeadWordBlockInfos( QDataStream & in )
   if ( version_ >= 2.0 )
   {
     // decrypt
-    if ( encrypted_ & EcryptedHeadWordIndex )
+    if ( encrypted_ & EncryptedHeadWordIndex )
     {
       if ( !decryptHeadWordIndex( headWordBlockInfo.data(),
                                   headWordBlockInfo.size() ) )
@@ -511,7 +510,7 @@ bool MdictParser::readRecordBlockInfos()
   qint64 recordInfoSize = readNumber( in );
   totalRecordsSize_ = readNumber( in );
   recordPos_ = file_->pos() + recordInfoSize;
-  GD_DPRINTF( "MdictParser: readRecordBlockInfos entries %lld %lld\n", entries, wordCount_);
+  GD_DPRINTF( "MdictParser: readRecordBlockInfos entries %lld %d\n", entries, wordCount_);
 
   // Build record block index
   recordBlockInfos_.reserve( numRecordBlocks );

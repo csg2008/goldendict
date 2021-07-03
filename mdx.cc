@@ -64,7 +64,7 @@ using namespace Mdict;
 
 enum
 {
-  kSignature = 0x4349444d,  // MDIC
+  kSignature = 0x4349444d,  // MDICT
   kCurrentFormatVersion = 11 + BtreeIndexing::FormatVersion + Folding::Version
 };
 
@@ -72,9 +72,9 @@ DEF_EX( exCorruptDictionary, "dictionary file was tampered or corrupted", std::e
 
 struct IdxHeader
 {
-  uint32_t signature; // First comes the signature, MDIC
+  uint32_t signature; // First comes the signature, MDICT
   uint32_t formatVersion; // File format version, currently 1.
-  uint32_t parserVersion; // Version of the parser used to parse the MDIC file.
+  uint32_t parserVersion; // Version of the parser used to parse the MDICT file.
   // Version of the folding algorithm used when building
   // index. If it's different from the current one,
   // the file is to be rebuilt.
@@ -318,7 +318,7 @@ MdxDictionary::MdxDictionary( string const & id, string const & indexFile,
     encoding = string( &buf.front(), len );
   }
 
-  dictFile.setFileName( QString::fromUtf8( dictionaryFiles[ 0 ].c_str() ) );
+  dictFile.setFileName( QString::fromStdString( dictionaryFiles[ 0 ] ) );
   dictFile.open( QIODevice::ReadOnly );
 
   // Full-text search parameters
@@ -380,8 +380,7 @@ void MdxDictionary::deferredInit()
     if ( !deferredInitRunnableStarted )
     {
       QThreadPool::globalInstance()->start(
-        new MdxDeferredInitRunnable( *this, deferredInitRunnableExited ),
-        -1000 );
+        new MdxDeferredInitRunnable( *this, deferredInitRunnableExited ), -1000 );
       deferredInitRunnableStarted = true;
     }
   }
@@ -787,7 +786,7 @@ void MddResourceRequest::run()
 
   if ( dict.ensureInitDone().size() )
   {
-    setErrorString( QString::fromUtf8( dict.ensureInitDone().c_str() ) );
+    setErrorString( QString::fromStdString( dict.ensureInitDone() ) );
     finish();
     return;
   }
@@ -1424,7 +1423,7 @@ static void findResourceFiles( string const & mdx, vector< string > & dictFiles 
     //   demo.1.mdd <- 2nd volume
     //   ...
     //   demo.n.mdd <- nth volume
-    QString baseU8 = QString::fromUtf8( base.c_str() );
+    QString baseU8 = QString::fromStdString( base );
     int vol = 1;
     while ( File::tryPossibleName( string( QString( "%1.%2.mdd" ).arg( baseU8 ).arg( vol )
                                            .toUtf8().constBegin() ), resFile ) )
@@ -1459,12 +1458,12 @@ vector< sptr< Dictionary::Class > > makeDictionaries( vector< string > const & f
     {
       // Building the index
 
-      gdDebug( "MDict: Building the index for dictionary: %s\n", i->c_str() );
+      gdDebug( "MDict: Building the index for dictionary: %s\n", *i );
 
       MdictParser parser;
       list< sptr< MdictParser > > mddParsers;
 
-      if ( !parser.open( i->c_str() ) )
+      if ( !parser.open( *i ) )
         continue;
 
       string title = string( parser.title().toUtf8().constData() );
@@ -1476,9 +1475,9 @@ vector< sptr< Dictionary::Class > > makeDictionaries( vector< string > const & f
         if ( File::exists( *mddIter ) )
         {
           sptr< MdictParser > mddParser = new MdictParser();
-          if ( !mddParser->open( mddIter->c_str() ) )
+          if ( !mddParser->open( *mddIter ) )
           {
-            gdWarning( "Broken mdd (resource) file: %s\n", mddIter->c_str() );
+            gdWarning( "Broken mdd (resource) file: %s\n", *mddIter );
             continue;
           }
           mddParsers.push_back( mddParser );
@@ -1612,10 +1611,10 @@ vector< sptr< Dictionary::Class > > makeDictionaries( vector< string > const & f
       idxHeader.mddIndexInfosCount = mddIndexInfos.size();
       for ( uint32_t mi = 0; mi < mddIndexInfos.size(); mi++ )
       {
-        const string & mddfile = mddFileNames[ mi ];
+        const string & mddFile = mddFileNames[ mi ];
 
-        idx.write<quint32>( ( quint32 )mddfile.size() + 1 );
-        idx.write( mddfile.c_str(), mddfile.size() + 1 );
+        idx.write<quint32>( ( quint32 )mddFile.size() + 1 );
+        idx.write( mddFile.c_str(), mddFile.size() + 1 );
         idx.write<uint32_t>( mddIndexInfos[ mi ].btreeMaxElements );
         idx.write<uint32_t>( mddIndexInfos[ mi ].rootOffset );
       }
