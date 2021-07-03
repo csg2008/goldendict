@@ -162,10 +162,6 @@ public:
 
   // helpers
   static QString toUtf16( const char * fromCode, const char * from, size_t fromSize );
-  static inline QString toUtf16( QString const & fromCode, const char * from, size_t fromSize )
-  {
-    return toUtf16( fromCode.toLatin1().constData(), from, fromSize );
-  }
   static bool parseCompressedBlock( qint64 compressedBlockSize, const char * compressedBlockPtr,
                                     qint64 decompressedBlockSize, QByteArray & decompressedBlock);
   static QString & substituteStylesheet( QString & article, StyleSheets const & styleSheets );

@@ -1458,7 +1458,7 @@ vector< sptr< Dictionary::Class > > makeDictionaries( vector< string > const & f
     {
       // Building the index
 
-      gdDebug( "MDict: Building the index for dictionary: %s\n", *i );
+      gdDebug( "MDict: Building the index for dictionary: %s\n", i -> c_str() );
 
       MdictParser parser;
       list< sptr< MdictParser > > mddParsers;
@@ -1555,7 +1555,7 @@ vector< sptr< Dictionary::Class > > makeDictionaries( vector< string > const & f
       // Finish with the chunks
       idxHeader.chunksOffset = chunks.finish();
 
-      GD_DPRINTF( "Writing index...\n" );
+      gdDebug( "Writing index...\n" );
 
       // Good. Now build the index
       IndexInfo idxInfo = BtreeIndexing::buildIndex( indexedWords, idx );

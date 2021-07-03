@@ -122,7 +122,7 @@ MdictParser::MdictParser() :
 
 bool MdictParser::open( const std::string & filename )
 {
-  GD_DPRINTF( "MdictParser: open %s\n", filename.c_str() );
+  gdDebug( "MdictParser: open %s\n", filename.c_str() );
 
   filename_ = QString::fromStdString( filename );
   file_ = new QFile( filename_ );
@@ -510,7 +510,7 @@ bool MdictParser::readRecordBlockInfos()
   qint64 recordInfoSize = readNumber( in );
   totalRecordsSize_ = readNumber( in );
   recordPos_ = file_->pos() + recordInfoSize;
-  GD_DPRINTF( "MdictParser: readRecordBlockInfos entries %lld %d\n", entries, wordCount_);
+  gdDebug( "MdictParser: readRecordBlockInfos entries %lld %d\n", entries, wordCount_);
 
   // Build record block index
   recordBlockInfos_.reserve( numRecordBlocks );
@@ -606,7 +606,7 @@ MdictParser::HeadWordIndex MdictParser::splitHeadWordBlock( QByteArray const & b
       headWordBuf = QByteArray( p, headWordLength + 1 );
     }
     p += headWordBuf.size();
-    QString headWord = toUtf16( encoding_, headWordBuf.constBegin(), headWordBuf.size() );
+    QString headWord = toUtf16( encoding_.toUtf8(), headWordBuf.constBegin(), headWordBuf.size() );
     index.push_back( HeadWordIndex::value_type( headWordId, headWord ) );
   }
 
