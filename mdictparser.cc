@@ -41,6 +41,10 @@
 #include <QTextDocumentFragment>
 #include <QDataStream>
 
+#ifdef _MSC_VER
+#include <stub_msvc.h>
+#endif
+
 #include "decompress.hh"
 #include "gddebug.hh"
 #include "ripemd.hh"
@@ -72,11 +76,6 @@ static QDomNamedNodeMap parseHeaderAttributes( const QString & headerText )
 
   QDomElement docElem = doc.documentElement();
   QDomNamedNodeMap attributes = docElem.attributes();
-
-  for ( int i = 0; i < attributes.count(); i++ )
-  {
-    QDomAttr attr = attributes.item( i ).toAttr();
-  }
 
   return attributes;
 }
@@ -185,6 +184,15 @@ QString MdictParser::toUtf16( const char * fromCode, const char * from, size_t f
 {
   if ( !fromCode || !from )
     return QString();
+
+  if (!strcasecmp(fromCode, "UTF-8"))
+  {
+    return QString::fromUtf8( from, fromSize );
+  }
+  else if ((!strcasecmp(fromCode, "UTF-16") || !strcasecmp(fromCode, "UTF-16LE")) && fromSize >= 2)
+  {
+    return QString::fromUtf16( ( const ushort * )from );
+  }
 
   iconv_t conv = iconv_open( "UTF-16//IGNORE", fromCode );
   if ( conv == ( iconv_t ) - 1 )
