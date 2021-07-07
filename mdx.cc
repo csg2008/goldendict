@@ -180,9 +180,13 @@ public:
       return false;
     }
 
-    result.resize( indexEntry.recordSize );
-    memcpy( &result.front(), decompressed.constData() + indexEntry.recordOffset, indexEntry.recordSize );
-    return true;
+    if (indexEntry.recordOffset + indexEntry.recordSize <= decompressed.size()) {
+      result.resize( indexEntry.recordSize );
+      memcpy( &result.front(), decompressed.constData() + indexEntry.recordOffset, indexEntry.recordSize );
+      return true;
+    }
+
+    return false;
   }
 
 };
