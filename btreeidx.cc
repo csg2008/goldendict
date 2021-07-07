@@ -426,7 +426,7 @@ void BtreeWordSearchRequest::findMatches()
             if ( leafEntries == 0xffffFFFF )
             {
               //DPRINTF( "bah!\n" );
-              exit( 1 );
+              gdWarning( "btree index bah!" );
             }
           }
           else
