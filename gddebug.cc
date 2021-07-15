@@ -5,7 +5,7 @@
 #include <QString>
 #include "gddebug.hh"
 
-QFile * logFilePtr;
+QFile * logFilePtr = 0;
 static QTextCodec * utf8Codec;
 
 void gdWarning(const char *msg, ...)

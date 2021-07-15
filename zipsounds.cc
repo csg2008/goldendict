@@ -114,15 +114,10 @@ public:
   ZipSoundsDictionary( string const & id, string const & indexFile,
                        vector< string > const & dictionaryFiles );
 
-  virtual string getName() throw();
-
-  virtual map< Dictionary::Property, string > getProperties() throw()
-  { return map< Dictionary::Property, string >(); }
-
-  virtual unsigned long getArticleCount() throw()
+  virtual unsigned long getArticleCount() const
   { return idxHeader.soundsCount; }
 
-  virtual unsigned long getWordCount() throw()
+  virtual unsigned long getWordCount() const
   { return getArticleCount(); }
 
   virtual sptr< Dictionary::DataRequest > getArticle( wstring const &,
@@ -161,18 +156,11 @@ ZipSoundsDictionary::ZipSoundsDictionary( string const & id,
   zipsFile.openIndex( IndexInfo( idxHeader.indexBtreeMaxElements,
                                  idxHeader.indexRootOffset ),
                                  idx, idxMutex );
-
-}
-
-string ZipSoundsDictionary::getName() throw()
-{
   string result = FsEncoding::basename( getDictionaryFilenames()[ 0 ] );
+  dictionaryName = result.erase( result.rfind( '.' ) );
 
-  // Strip the extension
-  result.erase( result.rfind( '.' ) );
-
-  return result;
 }
+
 
 sptr< Dictionary::DataRequest > ZipSoundsDictionary::getArticle( wstring const & word,
                                                                  vector< wstring > const & alts,

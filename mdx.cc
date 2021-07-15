@@ -196,7 +196,6 @@ class MdxDictionary: public BtreeIndexing::BtreeDictionary
   Mutex idxMutex;
   File::Class idx;
   IdxHeader idxHeader;
-  string dictionaryName;
   string encoding;
   ChunkedStorage::Reader chunks;
   QFile dictFile;
@@ -218,22 +217,12 @@ public:
 
   virtual void deferredInit();
 
-  virtual string getName() throw()
-  {
-    return dictionaryName;
-  }
-
-  virtual map< Dictionary::Property, string > getProperties() throw()
-  {
-    return map< Dictionary::Property, string >();
-  }
-
-  virtual unsigned long getArticleCount() throw()
+  virtual unsigned long getArticleCount() const
   {
     return idxHeader.articleCount;
   }
 
-  virtual unsigned long getWordCount() throw()
+  virtual unsigned long getWordCount() const
   {
     return idxHeader.wordCount;
   }

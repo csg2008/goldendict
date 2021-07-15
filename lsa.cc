@@ -164,15 +164,10 @@ public:
   LsaDictionary( string const & id, string const & indexFile,
                  vector< string > const & dictionaryFiles );
 
-  virtual string getName() throw();
-
-  virtual map< Dictionary::Property, string > getProperties() throw()
-  { return map< Dictionary::Property, string >(); }
-
-  virtual unsigned long getArticleCount() throw()
+  virtual unsigned long getArticleCount() const
   { return idxHeader.soundsCount; }
 
-  virtual unsigned long getWordCount() throw()
+  virtual unsigned long getWordCount() const
   { return getArticleCount(); }
 
   virtual sptr< Dictionary::DataRequest > getArticle( wstring const &,
@@ -189,16 +184,6 @@ protected:
   virtual void loadIcon() throw();
 };
 
-string LsaDictionary::getName() throw()
-{
-  string result = FsEncoding::basename( getDictionaryFilenames()[ 0 ] );
-
-  // Strip the extension
-  result.erase( result.rfind( '.' ) );
-
-  return result;
-}
-
 LsaDictionary::LsaDictionary( string const & id,
                               string const & indexFile,
                               vector< string > const & dictionaryFiles ):
@@ -206,8 +191,12 @@ LsaDictionary::LsaDictionary( string const & id,
   idx( indexFile, "rb" ),
   idxHeader( idx.read< IdxHeader >() )
 {
-  // Initialize the index
+  string result = FsEncoding::basename( getDictionaryFilenames()[ 0 ] );
 
+  // Strip the extension
+  dictionaryName = result.erase( result.rfind( '.' ) );
+
+  // Initialize the index
   openIndex( IndexInfo( idxHeader.indexBtreeMaxElements,
                         idxHeader.indexRootOffset ),
              idx, idxMutex );

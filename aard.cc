@@ -230,11 +230,10 @@ class AardDictionary: public BtreeIndexing::BtreeDictionary
 {
     Mutex idxMutex;
     Mutex aardMutex;
+    File::Class df;
     File::Class idx;
     IdxHeader idxHeader;
     ChunkedStorage::Reader chunks;
-    string dictionaryName;
-    File::Class df;
 
   public:
 
@@ -243,16 +242,10 @@ class AardDictionary: public BtreeIndexing::BtreeDictionary
 
     ~AardDictionary();
 
-    virtual string getName() throw()
-    { return dictionaryName; }
-
-    virtual map< Dictionary::Property, string > getProperties() throw()
-    { return map< Dictionary::Property, string >(); }
-
-    virtual unsigned long getArticleCount() throw()
+    virtual unsigned long getArticleCount() const
     { return idxHeader.articleCount; }
 
-    virtual unsigned long getWordCount() throw()
+    virtual unsigned long getWordCount() const
     { return idxHeader.wordCount; }
 
     inline virtual quint32 getLangFrom() const

@@ -201,7 +201,6 @@ namespace
     Mutex idxMutex;
     File::Class idx;
     IdxHeader idxHeader;
-    string dictionaryName;
     ChunkedStorage::Reader chunks;
 
   public:
@@ -209,16 +208,10 @@ namespace
     BglDictionary( string const & id, string const & indexFile,
                    string const & dictionaryFile );
 
-    virtual string getName() throw()
-    { return dictionaryName; }
-
-    virtual map< Dictionary::Property, string > getProperties() throw()
-    { return map< Dictionary::Property, string >(); }
-
-    virtual unsigned long getArticleCount() throw()
+    virtual unsigned long getArticleCount() const
     { return idxHeader.articleCount; }
 
-    virtual unsigned long getWordCount() throw()
+    virtual unsigned long getWordCount() const
     { return idxHeader.wordCount; }
 
     inline virtual quint32 getLangFrom() const

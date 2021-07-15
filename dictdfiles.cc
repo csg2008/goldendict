@@ -26,10 +26,6 @@
 #include <QRegularExpression>
 #endif
 
-#ifdef _MSC_VER
-#include <stub_msvc.h>
-#endif
-
 namespace DictdFiles {
 
 using std::map;
@@ -92,7 +88,6 @@ class DictdDictionary: public BtreeIndexing::BtreeDictionary
   File::Class idx, indexFile; // The later is .index file
   IdxHeader idxHeader;
   dictData * dz;
-  string dictionaryName;
   Mutex indexFileMutex, dzMutex;
 
 public:
@@ -102,16 +97,10 @@ public:
 
   ~DictdDictionary();
 
-  virtual string getName() throw()
-  { return dictionaryName; }
-
-  virtual map< Dictionary::Property, string > getProperties() throw()
-  { return map< Dictionary::Property, string >(); }
-
-  virtual unsigned long getArticleCount() throw()
+  virtual unsigned long getArticleCount() const
   { return idxHeader.articleCount; }
 
-  virtual unsigned long getWordCount() throw()
+  virtual unsigned long getWordCount() const
   { return idxHeader.wordCount; }
 
   virtual void loadIcon() throw();
@@ -344,19 +333,19 @@ sptr< Dictionary::DataRequest > DictdDictionary::getArticle( wstring const & wor
       else
       {
 #if QT_VERSION >= QT_VERSION_CHECK( 5, 0, 0 )
-        static QRegularExpression phonetic( "\\\\([^\\\\]+)\\\\",
+        static const QRegularExpression phonetic( "\\\\([^\\\\]+)\\\\",
                                             QRegularExpression::CaseInsensitiveOption ); // phonetics: \stuff\ ...
-        static QRegularExpression refs( "\\{([^\\{\\}]+)\\}",
+        static const QRegularExpression refs( "\\{([^\\{\\}]+)\\}",
                                         QRegularExpression::CaseInsensitiveOption );     // links: {stuff}
-        static QRegularExpression links( "<a href=\"gdlookup://localhost/([^\"]*)\">",
+        static const QRegularExpression links( "<a href=\"gdlookup://localhost/([^\"]*)\">",
                                          QRegularExpression::CaseInsensitiveOption );
-        static QRegularExpression tags( "<[^>]*>",
+        static const QRegularExpression tags( "<[^>]*>",
                                         QRegularExpression::CaseInsensitiveOption );
 #else
-        static QRegExp phonetic( "\\\\([^\\\\]+)\\\\", Qt::CaseInsensitive ); // phonetics: \stuff\ ...
-        static QRegExp refs( "\\{([^\\{\\}]+)\\}", Qt::CaseInsensitive );     // links: {stuff}
-        static QRegExp links( "<a href=\"gdlookup://localhost/([^\"]*)\">", Qt::CaseInsensitive );
-        static QRegExp tags( "<[^>]*>", Qt::CaseInsensitive );
+        static const QRegExp phonetic( "\\\\([^\\\\]+)\\\\", Qt::CaseInsensitive ); // phonetics: \stuff\ ...
+        static const QRegExp refs( "\\{([^\\{\\}]+)\\}", Qt::CaseInsensitive );     // links: {stuff}
+        static const QRegExp links( "<a href=\"gdlookup://localhost/([^\"]*)\">", Qt::CaseInsensitive );
+        static const QRegExp tags( "<[^>]*>", Qt::CaseInsensitive );
 #endif
 
         articleText = string( "<div class=\"dictd_article\"" );
@@ -569,13 +558,13 @@ void DictdDictionary::getArticleText( uint32_t articleAddress, QString & headwor
     else
     {
 #if QT_VERSION >= QT_VERSION_CHECK( 5, 0, 0 )
-      static QRegularExpression phonetic( "\\\\([^\\\\]+)\\\\",
+      static const QRegularExpression phonetic( "\\\\([^\\\\]+)\\\\",
                                           QRegularExpression::CaseInsensitiveOption ); // phonetics: \stuff\ ...
-      static QRegularExpression refs( "\\{([^\\{\\}]+)\\}",
+      static const QRegularExpression refs( "\\{([^\\{\\}]+)\\}",
                                       QRegularExpression::CaseInsensitiveOption );     // links: {stuff}
 #else
-      static QRegExp phonetic( "\\\\([^\\\\]+)\\\\", Qt::CaseInsensitive ); // phonetics: \stuff\ ...
-      static QRegExp refs( "\\{([^\\{\\}]+)\\}", Qt::CaseInsensitive );     // links: {stuff}
+      static const QRegExp phonetic( "\\\\([^\\\\]+)\\\\", Qt::CaseInsensitive ); // phonetics: \stuff\ ...
+      static const QRegExp refs( "\\{([^\\{\\}]+)\\}", Qt::CaseInsensitive );     // links: {stuff}
 #endif
 
       string convertedText = Html::preformat( articleBody, isToLanguageRTL() );
@@ -738,6 +727,7 @@ vector< sptr< Dictionary::Class > > makeDictionaries(
                       GD_DPRINTF( "DICT NAME: '%s'\n", eol );
                       dictionaryName = eol;
                     }
+                    xfree(articleBody);
                   }
                   dict_data_close( dz );
                 }

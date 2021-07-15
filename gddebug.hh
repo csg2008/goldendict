@@ -22,7 +22,6 @@ void gdDebug(const char *, ...)
     __attribute__ ((format (printf, 1, 2)))
 #endif
 ;
-
 extern QFile * logFilePtr;
 
 #endif // __GDDEBUG_HH_INCLUDED__

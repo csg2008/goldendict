@@ -137,6 +137,7 @@ public:
 
   WordSearchRequest(): uncertain( false )
   {}
+  virtual ~WordSearchRequest(){}
 
   /// Returns the number of matches found. The value can grow over time
   /// unless isFinished() is true.
@@ -177,7 +178,7 @@ class DataRequest: public Request
   Q_OBJECT
 
 public:
-
+  virtual ~DataRequest(){}
   /// Returns the number of bytes read, with a -1 meaning that so far it's
   /// uncertain whether resource even exists or not, and any non-negative value
   /// meaning that that amount of bytes is not available.
@@ -262,6 +263,7 @@ class Class
   vector< string > dictionaryFiles;
 
 protected:
+  string dictionaryName;
   QString dictionaryDescription;
   QIcon dictionaryIcon, dictionaryNativeIcon;
   bool dictionaryIconLoaded;
@@ -296,39 +298,43 @@ public:
   virtual void deferredInit();
 
   /// Returns the dictionary's id.
-  string getId() throw()
+  string const & getId() const
   { return id; }
 
   /// Returns the list of file names the dictionary consists of.
-  vector< string > const & getDictionaryFilenames() throw()
+  vector< string > const & getDictionaryFilenames() const
   { return dictionaryFiles; }
 
   /// Returns the dictionary's full name, utf8.
-  virtual string getName() throw()=0;
+  virtual string getName() const
+  { return dictionaryName; }
 
   /// Returns all the available properties, like the author's name, copyright,
   /// description etc. All strings are in utf8.
-  virtual map< Property, string > getProperties() throw()=0;
+  virtual map< Property, string > getProperties() const
+  { return map< Dictionary::Property, string >(); }
 
   /// Returns the features the dictionary possess. See the Feature enum for
   /// their list.
-  virtual Features getFeatures() const throw()
+  virtual Features getFeatures() const
   { return NoFeatures; }
 
   /// Returns the number of articles in the dictionary.
-  virtual unsigned long getArticleCount() throw()=0;
+  virtual unsigned long getArticleCount() const
+  { return 0; }
 
   /// Returns the number of words in the dictionary. This can be equal to
   /// the number of articles, or can be larger if some synonyms are present.
-  virtual unsigned long getWordCount() throw()=0;
+  virtual unsigned long getWordCount() const
+  { return 0; }
 
   /// Returns the dictionary's icon.
-  virtual QIcon const & getIcon() throw();
+  virtual QIcon const & getIcon();
 
   /// Returns the dictionary's native icon. Dsl icons are usually rectangular,
   /// and are adapted by getIcon() to be square. This function allows getting
   /// the original icon with no geometry transformations applied.
-  virtual QIcon const & getNativeIcon() throw();
+  virtual QIcon const & getNativeIcon();
 
   /// Returns the dictionary's source language.
   virtual quint32 getLangFrom() const
@@ -373,7 +379,7 @@ public:
   /// synchronously.
   virtual vector< wstring > getAlternateWritings( wstring const & )
     throw();
-  
+
   /// Returns a definition for the given word. The definition should
   /// be an html fragment (without html/head/body tags) in an utf8 encoding.
   /// The 'alts' vector could contain a list of words the definitions of which

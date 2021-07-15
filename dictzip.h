@@ -2,7 +2,7 @@
  * GoldenDict program.
  */
 
-/* data.h -- 
+/* data.h --
  * Created: Sat Mar 15 18:04:25 2003 by Aleksey Cheusov <vle@gmx.net>
  * Copyright 1994-2003 Rickard E. Faith (faith@dict.org)
  *
@@ -32,14 +32,17 @@
 #endif
 
 #ifdef __cplusplus
-extern "C" 
+extern "C"
 {
 #endif
 
+#define xmalloc malloc
+#define xfree free
 
 /* Excerpts from defs.h */
 
 #define DICT_CACHE_SIZE 5
+#define ERR_STRING_SIZE 512
 
 typedef struct dictCache {
    int           chunk;
@@ -66,7 +69,7 @@ typedef struct dictData {
 #endif
 
    unsigned long size;		/* size of file */
-   
+
    int           type;
    const char    *filename;
    z_stream      zStream;
@@ -90,7 +93,7 @@ typedef struct dictData {
    unsigned long compressedLength;
    int           stamp;
    dictCache     cache[DICT_CACHE_SIZE];
-   char          errorString[512];
+   char          errorString[ERR_STRING_SIZE];
 } dictData;
 
 

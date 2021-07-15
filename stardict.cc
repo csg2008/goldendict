@@ -138,7 +138,6 @@ class StardictDictionary: public BtreeIndexing::BtreeDictionary
   Mutex idxMutex;
   File::Class idx;
   IdxHeader idxHeader;
-  string bookName;
   string sameTypeSequence;
   ChunkedStorage::Reader chunks;
   Mutex dzMutex;
@@ -153,16 +152,10 @@ public:
 
   ~StardictDictionary();
 
-  virtual string getName() throw()
-  { return bookName; }
-
-  virtual map< Dictionary::Property, string > getProperties() throw()
-  { return map< Dictionary::Property, string >(); }
-
-  virtual unsigned long getArticleCount() throw()
+  virtual unsigned long getArticleCount() const
   { return idxHeader.wordCount; }
 
-  virtual unsigned long getWordCount() throw()
+  virtual unsigned long getWordCount() const
   { return idxHeader.wordCount + idxHeader.synWordCount; }
 
   inline virtual quint32 getLangFrom() const
@@ -237,12 +230,12 @@ StardictDictionary::StardictDictionary( string const & id,
   BtreeDictionary( id, dictionaryFiles ),
   idx( indexFile, "rb" ),
   idxHeader( idx.read< IdxHeader >() ),
-  bookName( loadString( idxHeader.bookNameSize ) ),
   sameTypeSequence( loadString( idxHeader.sameTypeSequenceSize ) ),
   chunks( idx, idxHeader.chunksOffset )
 {
-  // Open the .dict file
+  dictionaryName = loadString( idxHeader.bookNameSize );
 
+  // Open the .dict file
   DZ_ERRORS error;
   dz = dict_data_open( dictionaryFiles[ 2 ].c_str(), &error, 0 );
 

@@ -17,7 +17,7 @@ LangCoder langCoder;
 
 // Language codes
 
-static GDLangCode LangCodes[] = {
+static const GDLangCode LangCodes[] = {
 
     { "aa", "aar", -1, "Afar" },
     { "ab", "abk", -1, "Abkhazian" },
@@ -350,13 +350,13 @@ bool LangCoder::isLanguageRTL( quint32 code )
 {
   if ( langCoder.codeMap.contains( code ) )
   {
-    GDLangCode &lc = LangCodes[ langCoder.codeMap[ code ] ];
+    const GDLangCode &lc = LangCodes[ langCoder.codeMap[ code ] ];
     if( lc.isRTL < 0 )
     {
 #if QT_VERSION >= 0x040700
-      lc.isRTL = ( int )( QLocale( lc.code ).textDirection() == Qt::RightToLeft );
+      return ( QLocale( lc.code ).textDirection() == Qt::RightToLeft );
 #else
-      lc.isRTL = 0;
+      return false;
 #endif
     }
     return lc.isRTL != 0;

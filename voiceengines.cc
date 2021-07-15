@@ -42,19 +42,8 @@ public:
       vector< string >() ),
     voiceEngine( voiceEngine )
   {
+    dictionaryName = voiceEngine.name.toStdString();
   }
-
-  virtual string getName() throw()
-  { return voiceEngine.name.toUtf8().data(); }
-
-  virtual map< Property, string > getProperties() throw()
-  { return map< Property, string >(); }
-
-  virtual unsigned long getArticleCount() throw()
-  { return 0; }
-
-  virtual unsigned long getWordCount() throw()
-  { return 0; }
 
   virtual sptr< WordSearchRequest > prefixMatch( wstring const & word,
                                                  unsigned long maxResults )
