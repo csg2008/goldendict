@@ -26,10 +26,6 @@
 #include <ctype.h>
 #include <stdlib.h>
 
-#ifdef _MSC_VER
-#include <stub_msvc.h>
-#endif
-
 #include <QDir>
 #include <QString>
 #include <QSemaphore>

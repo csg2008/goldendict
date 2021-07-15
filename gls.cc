@@ -40,10 +40,6 @@
 #include <map>
 #include <set>
 
-#ifdef _MSC_VER
-#include <stub_msvc.h>
-#endif
-
 namespace Gls {
 
 using std::list;
@@ -717,6 +713,7 @@ void GlsDictionary::loadArticleText( uint32_t address,
   else
   {
     string articleData = Iconv::toUtf8( GlsScanner::getEncodingNameFor( Encoding( idxHeader.glsEncoding ) ), articleBody, articleSize );
+    xfree(articleBody);
     string::size_type start_pos = 0, end_pos = 0;
 
     for( ; ; )

@@ -568,7 +568,7 @@ void DictdDictionary::getArticleText( uint32_t articleAddress, QString & headwor
 #endif
 
       string convertedText = Html::preformat( articleBody, isToLanguageRTL() );
-      free( articleBody );
+      xfree( articleBody );
 
       text = QString::fromUtf8( convertedText.data(), convertedText.size() )
             .replace(phonetic, "<span class=\"dictd_phonetic\">\\1</span>")

@@ -306,7 +306,7 @@ public:
   { return dictionaryFiles; }
 
   /// Returns the dictionary's full name, utf8.
-  virtual string getName() const
+  inline string const & getName() const
   { return dictionaryName; }
 
   /// Returns all the available properties, like the author's name, copyright,

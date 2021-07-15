@@ -31,10 +31,6 @@
 #include <list>
 #include <wctype.h>
 
-#ifdef _MSC_VER
-#include <stub_msvc.h>
-#endif
-
 #include <QSemaphore>
 #include <QThreadPool>
 #include <QAtomicInt>
@@ -592,7 +588,7 @@ void DslDictionary::loadArticle( uint32_t address,
           DslIconv::toWstring(
             DslIconv::getEncodingNameFor( DslEncoding( idxHeader.dslEncoding ) ),
             articleBody, articleSize );
-        free( articleBody );
+        xfree( articleBody );
 
         // Strip DSL comments
         bool b = false;
@@ -600,7 +596,7 @@ void DslDictionary::loadArticle( uint32_t address,
       }
       catch( ... )
       {
-        free( articleBody );
+        xfree( articleBody );
         throw;
       }
     }
@@ -1355,7 +1351,7 @@ void DslDictionary::getArticleText( uint32_t articleAddress, QString & headword,
         DslIconv::toWstring(
           DslIconv::getEncodingNameFor( DslEncoding( idxHeader.dslEncoding ) ),
           articleBody, articleSize );
-      free( articleBody );
+      xfree( articleBody );
 
       // Strip DSL comments
       bool b = false;
@@ -1363,7 +1359,7 @@ void DslDictionary::getArticleText( uint32_t articleAddress, QString & headword,
     }
     catch( ... )
     {
-      free( articleBody );
+      xfree( articleBody );
       return;
     }
   }
@@ -1499,7 +1495,7 @@ void DslDictionary::getArticleText( uint32_t articleAddress, QString & headword,
     // Strip some areas
 
     const int stripTagsNumber = 5;
-    static QString stripTags[ stripTagsNumber ] =
+    static const QString stripTags[ stripTagsNumber ] =
                                                   {
                                                     "s",
                                                     "url",
@@ -1507,7 +1503,7 @@ void DslDictionary::getArticleText( uint32_t articleAddress, QString & headword,
                                                     "video",
                                                     "preview"
                                                   };
-    static QString stripEndTags[ stripTagsNumber ] =
+    static const QString stripEndTags[ stripTagsNumber ] =
                                                   {
                                                     "[/s]",
                                                     "[/url]",

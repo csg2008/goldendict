@@ -1,6 +1,7 @@
 /* This file is (c) 2008-2012 Konstantin Isakov <ikm@goldendict.org>
  * Part of GoldenDict. Licensed under GPLv3 or later, see the LICENSE file */
-
+#ifndef GD_UTF8_code_HH
+#define GD_UTF8_code_HH
 #include <cstdio>
 #include <string>
 #include "cpp_features.hh"
@@ -41,3 +42,4 @@ wstring decode( string const & ) THROW_SPEC( exCantDecode );
 bool isspace( int c );
 
 }
+#endif

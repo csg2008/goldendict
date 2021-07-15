@@ -213,7 +213,7 @@ void LoadDictionaries::handlePath( Config::Path const & path )
     dictionaries.insert( dictionaries.end(), glsDictionaries.begin(),
                          glsDictionaries.end() );
   }
-#ifdef MAKE_ZIM_SUPPORT
+#ifdef MAKE_SLOB_SUPPORT
   {
     vector< sptr< Dictionary::Class > > zimDictionaries =
       Zim::makeDictionaries( allFiles, FsEncoding::encode( Config::getIndexDir() ), *this, maxHeadwordToExpand );

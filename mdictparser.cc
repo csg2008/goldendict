@@ -41,10 +41,7 @@
 #include <QTextDocumentFragment>
 #include <QDataStream>
 
-#ifdef _MSC_VER
-#include <stub_msvc.h>
-#endif
-
+#include "cpp_features.hh"
 #include "decompress.hh"
 #include "gddebug.hh"
 #include "ripemd.hh"

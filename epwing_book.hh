@@ -3,10 +3,6 @@
 
 #include <qglobal.h>
 
-#if defined( Q_OS_WIN32 ) || defined( Q_OS_MAC )
-#define _FILE_OFFSET_BITS 64
-#endif
-
 #include "dictionary.hh"
 #include "ex.hh"
 #include "mutex.hh"

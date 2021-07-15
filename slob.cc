@@ -1,7 +1,7 @@
 /* This file is (c) 2015 Abs62
  * Part of GoldenDict. Licensed under GPLv3 or later, see the LICENSE file */
 
-#ifdef MAKE_ZIM_SUPPORT
+#ifdef MAKE_SLOB_SUPPORT
 
 #include "slob.hh"
 #include "btreeidx.hh"
@@ -18,10 +18,6 @@
 #include "filetype.hh"
 #include "tiff.hh"
 #include "qt4x5.hh"
-
-#ifdef _MSC_VER
-#include <stub_msvc.h>
-#endif
 
 #include <QString>
 #include <QFile>
@@ -94,7 +90,7 @@ __attribute__((packed))
 
 #pragma pack( pop )
 
-const char SLOB_MAGIC[ 8 ] = { 0x21, 0x2d, 0x31, 0x53, 0x4c, 0x4f, 0x42, 0x1f };
+static const char SLOB_MAGIC[ 8 ] = { 0x21, 0x2d, 0x31, 0x53, 0x4c, 0x4f, 0x42, 0x1f };
 
 struct RefEntry
 {
