@@ -291,12 +291,12 @@ static enum  DZ_ERRORS dict_read_header( const char *filename,
       header->origFilename     = NULL;//str_find( filename );
       header->mtime            = sb.st_mtime;
       if (computeCRC) {
-	 rewind( str );
-	 while (!feof( str )) {
-	    if ((count = fread( buffer, 1, BUFFERSIZE, str ))) {
-	       crc = crc32( crc, (Bytef *)buffer, count );
-	    }
-	 }
+         rewind( str );
+         while (!feof( str )) {
+            if ((count = (int) fread( buffer, 1, BUFFERSIZE, str ))) {
+               crc = crc32( crc, (Bytef *)buffer, count );
+            }
+         }
       }
       header->crc = crc;
       fclose( str );
@@ -378,7 +378,7 @@ static enum  DZ_ERRORS dict_read_header( const char *filename,
 
       *pt = '\0';
       header->origFilename = NULL;//str_find( buffer );
-      header->headerLength += strlen( buffer ) + 1;
+      header->headerLength += (int) (strlen( buffer ) + 1);
    } else {
       header->origFilename = NULL;
    }
@@ -401,7 +401,7 @@ static enum  DZ_ERRORS dict_read_header( const char *filename,
 
       *pt = '\0';
       header->comment = NULL;//str_find( buffer );
-      header->headerLength += strlen( buffer ) + 1;
+      header->headerLength += (int) (strlen( buffer ) + 1);
    } else {
       header->comment = NULL;
    }
