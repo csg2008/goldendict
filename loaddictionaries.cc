@@ -385,7 +385,7 @@ void loadDictionaries( QWidget * parent, bool showInitially,
   QTextCodec::setCodecForCStrings( QTextCodec::codecForName( "UTF8" ) );
 #endif
 
-  for( unsigned x = dictionaries.size(); x--; )
+  for( size_t x = dictionaries.size(); x--; )
   {
     ret = ids.insert( dictionaries[ x ]->getId() );
     if( !ret.second )

@@ -45,14 +45,14 @@ public:
 
 class Table: public map< wstring, wstring >
 {
-  unsigned maxEntrySize;
+  size_t maxEntrySize;
 
 public:
 
   Table(): maxEntrySize( 0 )
   {}
 
-  unsigned getMaxEntrySize() const
+  size_t getMaxEntrySize() const
   { return maxEntrySize; }
 
 protected:

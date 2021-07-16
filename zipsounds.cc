@@ -341,7 +341,7 @@ sptr< Dictionary::DataRequest > ZipSoundsDictionary::getResource( string const &
   // Find sound
 
   uint32_t dataOffset = 0;
-  for( int x = chain.size() - 1; x >= 0 ; x-- )
+  for( size_t x = chain.size() - 1; x >= 0 ; x-- )
   {
     vector< char > chunk;
     char * nameBlock = chunks->getBlock( chain[ x ].articleOffset, chunk );
@@ -445,8 +445,8 @@ vector< sptr< Dictionary::Class > > makeDictionaries(
             {
               // Save original name
 
-              uint32_t offset = chunks.startNewBlock();
-              uint16_t sz = links[ x ].word.size();
+              uint32_t offset = (uint32_t) chunks.startNewBlock();
+              uint16_t sz = (uint16_t) links[ x ].word.size();
               chunks.addToBlock( &sz, sizeof(uint16_t) );
               chunks.addToBlock( links[ x ].word.c_str(), sz );
               chunks.addToBlock( &links[ x ].articleOffset, sizeof( uint32_t ) );

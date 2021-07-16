@@ -96,7 +96,7 @@ vector< wstring > TransliterationDictionary::getAlternateWritings( wstring const
 
   while( left )
   {
-    unsigned x;
+    size_t x;
 
     for( x = table.getMaxEntrySize(); x >= 1; --x )
     {
